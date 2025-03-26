@@ -1,4 +1,4 @@
-Shader "Custom/S_ToonWaterShader" //change path for schear in material
+Shader "Custom/S_ToonBigWaveShader" //change path for schear in material
 {
     Properties
     {
@@ -12,6 +12,10 @@ Shader "Custom/S_ToonWaterShader" //change path for schear in material
 
         _WaveDirection("WaveDirection", vector) = (1,1,1)
 
+        _HeightFactor("HeightFactor", float) = 0.1
+        _Speed("Speed", float) = 1
+        _Frequency("Frequency", float) = 5
+        _Amplitude("Amplitude", float) = 0.1
     }
     SubShader
     {
@@ -39,12 +43,17 @@ Shader "Custom/S_ToonWaterShader" //change path for schear in material
             float _SurfaceNoiseCutoff;
             float _FoamDistance;
             uniform vector _WaveDirection;
+            uniform float _HeightFactor;
+            uniform float _Speed;
+            uniform float _Frequency;
+            uniform float _Amplitude;
 
             #include "UnityCG.cginc"
 
             struct VertexInput //appdata
             {
                 float4 vertex : POSITION;
+                float4 normal : NORMAL;
                 float4 uv: TEXCOORD0;
 
             };
@@ -52,19 +61,33 @@ Shader "Custom/S_ToonWaterShader" //change path for schear in material
            struct VertexOutput//v2f
            {
                float4 vertex : SV_POSITION;
+               float4 normal : NORMAL;
                float2 noiseUV: TEXCOORD0;
                float4 screenPosition : TEXCOORD2;
+               float displacement : DISPLACEMENT;
            };
+
+           float4 vertexAnimFlag(float4 pos, float2 uv)
+           {
+                pos.y = pos.y + sin((uv.y - _Time.y * _Speed) * _Frequency) * _Amplitude;
+                return pos;
+           }
 
            VertexOutput vert (VertexInput v)
            {
                VertexOutput o;
 
                v.uv.xy +=_Time.x * _WaveDirection;
+               v.vertex = vertexAnimFlag(v.vertex, v.uv.xy);
 
                o.vertex = UnityObjectToClipPos(v.vertex);
                o.screenPosition = ComputeScreenPos(o.vertex);
                o.noiseUV = TRANSFORM_TEX(v.uv, _NoiseTex);
+
+               o.displacement = tex2Dlod(_NoiseTex, v.uv * _NoiseTex_ST);
+               o.vertex = UnityObjectToClipPos(v.vertex + (v.normal * o.displacement * _HeightFactor));
+
+               o.displacement += v.vertex.y;
                return o;
            }
 
@@ -83,7 +106,7 @@ Shader "Custom/S_ToonWaterShader" //change path for schear in material
                float surfaceNoiseCutoff = foamDepthDifference01 * _SurfaceNoiseCutoff;
                float surfaceNoise = surfaceNoiseSample > surfaceNoiseCutoff ? 1 : 0;
 
-               return waterColor + surfaceNoise;
+               return waterColor + surfaceNoise ;
            }
 
            ENDCG
