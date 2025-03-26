@@ -6,7 +6,7 @@ Shader "Custom/S_SqrtShader" //change path for schear in material
         _SecondaryTex("Main Texture", 2D) = "white"{}
         _FirstColor("FirstColor", Color) = (1,1,1,1)
         _SecondColor("SecondColor", Color) = (1,1,1,1)
-        _GradientSensivity("GradientSensivity", float) = 1
+        _GradientSensivity("GradientSensivity", Range(0,100)) = 1
     }
     SubShader
     {
