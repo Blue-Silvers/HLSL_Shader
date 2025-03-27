@@ -7,16 +7,17 @@ Shader "Custom/S_FoamAndGradientWaveShader" //change path for schear in material
         _FirstColor("FirstColor", Color) = (1,1,1,1)
         _SecondColor("SecondColor", Color) = (1,1,1,1)
         _HeightFactor("HeightFactor", float) = 0.1
-        _Speed("Speed", float) = 1
-        _Frequency("Frequency", float) = 5
+        _Speed("Speed", vector) = (1,2,3)
+        _Frequency("Frequency", vector) = (1,2,3)
         _Amplitude("Amplitude", float) = 0.1
         _WaveDirection("WaveDirection", vector) = (1,1,1)
         _GradientSensivity("GradientSensivity", Range(0, 1)) = 1
 
-        _ShallowColor("Depth Color Shallow", Color) = (0.325, 0.807, 0.971, 0.725)
-        _DeepColor("Depth Color Deep", Color) = (0.086, 0.407, 1, 0.749)
-        _DepthMaxDistance("Depth Maximum Distance", Float) = 1
+        // _ShallowColor("Depth Color Shallow", Color) = (0.325, 0.807, 0.971, 0.725)
+        // _DeepColor("Depth Color Deep", Color) = (0.086, 0.407, 1, 0.749)
+        // _DepthMaxDistance("Depth Maximum Distance", Float) = 1
 
+        _FoamColor("FoamColor", Color) = (1,1,1,1)
         _SurfaceNoiseCutoff("Surface Noise Cutoff", Range(0, 1)) = 0.777
         _FoamDistance("FoamDistance", float) = 1
     }
@@ -42,17 +43,18 @@ Shader "Custom/S_FoamAndGradientWaveShader" //change path for schear in material
             uniform sampler2D _MainTex;
             uniform float4 _MainTex_ST;
             uniform float _HeightFactor;
-            uniform float _Speed;
-            uniform float _Frequency;
+            uniform vector _Speed;
+            uniform vector _Frequency;
             uniform float _Amplitude;
             uniform vector _WaveDirection;
             float _GradientSensivity;
             uniform sampler2D _Gradient;
             uniform float4 _Gradient_ST;
 
-            float4 _ShallowColor;
-            float4 _DeepColor;
-            float _DepthMaxDistance;
+            // float4 _ShallowColor;
+            // float4 _DeepColor;
+            // float _DepthMaxDistance;
+            uniform half4 _FoamColor;
             sampler2D _CameraDepthTexture;
             float _SurfaceNoiseCutoff;
             float _FoamDistance;
@@ -77,9 +79,13 @@ Shader "Custom/S_FoamAndGradientWaveShader" //change path for schear in material
                float4 screenPosition : TEXCOORD4;
            };
 
-           float4 vertexAnimFlag(float4 pos, float2 uv, float grad)
+           float4 vertexAnimWave(float4 pos, float2 uv)
            {
-                pos.y = pos.y + sin((uv.x - _Time.y * _Speed) * _Frequency) * (1-uv.x) * (_Amplitude  /* * sqrt(1 - grad * _GradientSensivity) */);
+                //Wave
+                pos.y = pos.y + sin((uv.x - _Time.y * _Speed.y) * _Frequency.y) * (1-uv.x) * _Amplitude; 
+                //Advence Wave
+                pos.x = _Speed.x != 0 ? pos.x + sin((uv.y - _Time.y * _Speed.x) * _Frequency.x) * _Amplitude : pos.x;
+                pos.z = _Speed.z != 0 ? pos.z + sin((uv.x - _Time.y * _Speed.z) * _Frequency.z) * _Amplitude : pos.z;
                 return pos;
            }
 
@@ -89,7 +95,7 @@ Shader "Custom/S_FoamAndGradientWaveShader" //change path for schear in material
 
                o.gradcoord.xy = (v.gradcoord.xy * _Gradient_ST.xy + _Gradient_ST.zw);
 
-               v.vertex = vertexAnimFlag(v.vertex, v.texcoord.xy, v.gradcoord.x); 
+               v.vertex = vertexAnimWave(v.vertex, v.texcoord.xy); 
                v.texcoord.xy +=_Time.x * _WaveDirection;
 
                o.texcoord.xy = (v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw);
@@ -112,8 +118,9 @@ Shader "Custom/S_FoamAndGradientWaveShader" //change path for schear in material
                 float4 color = color1 + color2 + i.displacement;
                 color.a = sqrt(1 - i.gradcoord.x * _GradientSensivity);
 
+                //foam
                 float existingDepth01 = tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.screenPosition)).r;
-               float existingDepthLinear = LinearEyeDepth(existingDepth01);
+                float existingDepthLinear = LinearEyeDepth(existingDepth01);
 
                 float depthDifference = existingDepthLinear - i.screenPosition.w;
 
@@ -121,24 +128,14 @@ Shader "Custom/S_FoamAndGradientWaveShader" //change path for schear in material
                 float foamDepthDifference01 = saturate(depthDifference / _FoamDistance);
                 float surfaceNoiseCutoff = foamDepthDifference01 * _SurfaceNoiseCutoff;
                 float surfaceNoise = surfaceNoiseSample > surfaceNoiseCutoff ? 1 : 0;
+                //fix foam color
+                color.x = color.x + surfaceNoise >= 1 ? _FoamColor.x : color.x + surfaceNoise;
+                color.y = color.y + surfaceNoise >= 1 ? _FoamColor.y : color.y + surfaceNoise;
+                color.z = color.z + surfaceNoise >= 1 ? _FoamColor.z : color.z + surfaceNoise;
+                color.w = color.w + surfaceNoise >= 1 ? _FoamColor.w : color.w + surfaceNoise;
 
-                return color + surfaceNoise;
-
-                ////////
-               //  float existingDepth01 = tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.screenPosition)).r;
-               // float existingDepthLinear = LinearEyeDepth(existingDepth01);
-
-               //float depthDifference = existingDepthLinear - i.screenPosition.w;
-
-               // float waterDepthDifference01 = saturate(depthDifference / _DepthMaxDistance);
-               // float4 waterColor = lerp(_ShallowColor, _DeepColor, waterDepthDifference01);
-
-               // float4 surfaceNoiseSample = tex2D(_NoiseTex, i.noiseUV);
-               // float foamDepthDifference01 = saturate(depthDifference / _FoamDistance);
-               // float surfaceNoiseCutoff = foamDepthDifference01 * _SurfaceNoiseCutoff;
-               // float surfaceNoise = surfaceNoiseSample > surfaceNoiseCutoff ? 1 : 0;
-
-               // return waterColor + surfaceNoise;
+                //frag
+                return color;
            }
 
            ENDCG
