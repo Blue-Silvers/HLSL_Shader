@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: MI_WaterBeach
-  m_Shader: {fileID: 4800000, guid: 46451379bbb54b54fa3c6233b0344c05, type: 3}
+  m_Shader: {fileID: 4800000, guid: 26b09e9504088a149b415698ea36aaeb, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -43,6 +43,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Gradient:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 7dd3a8e5d2e533a48adec1abd85143d5, type: 3}
         m_Scale: {x: 2, y: 2}
@@ -68,14 +72,16 @@ Material:
     - _Amplitude: 0.3
     - _BumpScale: 1
     - _Cutoff: 0.5
+    - _DepthMaxDistance: 1
     - _DetailNormalMapScale: 1
     - _DisplacementForce: 0.5
     - _DstBlend: 0
+    - _FoamDistance: 9.15
     - _Frequency: 30
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _GradientSensivity: 0.97
+    - _GradientSensivity: 1
     - _HeightFactor: 0.2
     - _Metallic: 0
     - _Mode: 0
@@ -85,12 +91,15 @@ Material:
     - _SpecularHighlights: 1
     - _Speed: 0.1
     - _SrcBlend: 1
+    - _SurfaceNoiseCutoff: 0.777
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DeepColor: {r: 0.08599999, g: 0.40699998, b: 1, a: 0.749}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FirstColor: {r: 0.6462264, g: 0.9722263, b: 1, a: 1}
     - _SecondColor: {r: 0.12549019, g: 0.53090143, b: 0.9764706, a: 1}
+    - _ShallowColor: {r: 0.32499996, g: 0.807, b: 0.971, a: 0.725}
     - _WaveDirection: {r: -2, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

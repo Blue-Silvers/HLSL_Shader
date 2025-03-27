@@ -3,7 +3,7 @@ Shader "Custom/S_GradientWaveShader" //change path for schear in material
     Properties
     {
         _MainTex("Main Texture", 2D) = "white"{}
-        _Test("Test Texture", 2D) = "white"{}
+        _Gradient("Gradient Texture", 2D) = "white"{}
         _FirstColor("FirstColor", Color) = (1,1,1,1)
         _SecondColor("SecondColor", Color) = (1,1,1,1)
         _HeightFactor("HeightFactor", float) = 0.1
@@ -40,8 +40,8 @@ Shader "Custom/S_GradientWaveShader" //change path for schear in material
             uniform float _Amplitude;
             uniform vector _WaveDirection;
             float _GradientSensivity;
-            uniform sampler2D _Test;
-            uniform float4 _Test_ST;
+            uniform sampler2D _Gradient;
+            uniform float4 _Gradient_ST;
 
             #include "UnityCG.cginc"
 
@@ -50,7 +50,7 @@ Shader "Custom/S_GradientWaveShader" //change path for schear in material
                 float4 vertex : POSITION;
                 float4 normal : NORMAL;
                 float4 texcoord : TEXCOORD0;
-                float4 testcoord : TEXCOORD2;
+                float4 gradcoord : TEXCOORD2;
             };
 
            struct VertexOutput//v2f
@@ -59,12 +59,12 @@ Shader "Custom/S_GradientWaveShader" //change path for schear in material
                float4 normal : NORMAL;
                float4 texcoord : TEXCOORD0;
                float displacement : DISPLACEMENT;
-               float4 testcoord : TEXCOORD2;
+               float4 gradcoord : TEXCOORD2;
            };
 
            float4 vertexAnimFlag(float4 pos, float2 uv, float grad)
            {
-                pos.y = pos.y + sin((uv.x - _Time.y * _Speed) * _Frequency) * (_Amplitude * sqrt(1 - grad * _GradientSensivity));
+                pos.y = pos.y + sin((uv.x - _Time.y * _Speed) * _Frequency) * (1-uv.x) * (_Amplitude  /* * sqrt(1 - grad * _GradientSensivity) */);
                 return pos;
            }
 
@@ -72,9 +72,9 @@ Shader "Custom/S_GradientWaveShader" //change path for schear in material
            {
                VertexOutput o;
 
-               o.testcoord.xy = (v.testcoord.xy * _Test_ST.xy + _Test_ST.zw);
+               o.gradcoord.xy = (v.gradcoord.xy * _Gradient_ST.xy + _Gradient_ST.zw);
 
-               v.vertex = vertexAnimFlag(v.vertex, v.texcoord.xy, v.testcoord.x); 
+               v.vertex = vertexAnimFlag(v.vertex, v.texcoord.xy, v.gradcoord.x); 
                v.texcoord.xy +=_Time.x * _WaveDirection;
 
                o.texcoord.xy = (v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw);
@@ -93,7 +93,7 @@ Shader "Custom/S_GradientWaveShader" //change path for schear in material
                 float4 color2 = (1-i.displacement) * _SecondColor;
 
                 float4 color = color1 + color2 + i.displacement;
-                color.a = sqrt(1 - i.testcoord.x * _GradientSensivity);
+                color.a = sqrt(1 - i.gradcoord.x * _GradientSensivity);
                 return color;
            }
 
