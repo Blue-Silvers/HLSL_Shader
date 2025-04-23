@@ -98,10 +98,10 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DeepColor: {r: 0.08599999, g: 0.40699998, b: 1, a: 0.749}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FirstColor: {r: 0.6462264, g: 0.9722263, b: 1, a: 1}
+    - _FirstColor: {r: 0.64705884, g: 1, b: 0.9858918, a: 1}
     - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
     - _Frequency: {r: 5, g: 30, b: 10, a: 1}
-    - _SecondColor: {r: 0.12549019, g: 0.53090143, b: 0.9764706, a: 1}
+    - _SecondColor: {r: 0.23851903, g: 0.48353457, b: 0.754717, a: 1}
     - _ShallowColor: {r: 0.32499996, g: 0.807, b: 0.971, a: 0.725}
     - _Speed: {r: 0.1, g: 0.1, b: 0.1, a: 1}
     - _WaveDirection: {r: -0.5, g: 0, b: 0, a: 1}

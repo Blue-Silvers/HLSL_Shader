@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: MI_ShowcaseWaterBeach
-  m_Shader: {fileID: 4800000, guid: 26b09e9504088a149b415698ea36aaeb, type: 3}
+  m_Shader: {fileID: 4800000, guid: bcd7e2860a6a19741b4759a7467a04d4, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -45,15 +45,23 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _Gradient:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
+        m_Scale: {x: 1, y: 2}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 2adb19e8dd11d7f459578db928e1ea7d, type: 3}
-        m_Scale: {x: 2, y: 2}
+        m_Scale: {x: 4, y: 6}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalTex1:
+        m_Texture: {fileID: 2800000, guid: 9b0935f6979baf94582a1ed15dabcfb9, type: 3}
+        m_Scale: {x: 10, y: 20}
+        m_Offset: {x: 0, y: 0}
+    - _NormalTex2:
+        m_Texture: {fileID: 2800000, guid: 5d50027f483cb684599435ceab3658b7, type: 3}
+        m_Scale: {x: 10, y: 20}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
         m_Texture: {fileID: 0}
@@ -85,6 +93,7 @@ Material:
     - _HeightFactor: 0.1
     - _Metallic: 0
     - _Mode: 0
+    - _NormalStrength: 2
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
@@ -100,9 +109,10 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FirstColor: {r: 0.2028302, g: 0.66092783, b: 1, a: 1}
     - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Frequency: {r: 5, g: 30, b: 10, a: 1}
+    - _Frequency: {r: 5, g: 60, b: 10, a: 1}
+    - _LightDir: {r: 10, g: 60, b: 85, a: 0}
     - _SecondColor: {r: 0.18623178, g: 0.5141386, b: 0.8773585, a: 1}
     - _ShallowColor: {r: 0.32499996, g: 0.807, b: 0.971, a: 0.725}
-    - _Speed: {r: 0.05, g: 0.05, b: 0.05, a: 0.05}
-    - _WaveDirection: {r: -0.5, g: 0, b: 0, a: 1}
+    - _Speed: {r: 0.04, g: 0.02, b: 0.04, a: 0.05}
+    - _WaveDirection: {r: -0.2, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
