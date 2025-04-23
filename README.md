@@ -59,6 +59,10 @@ https://github.com/user-attachments/assets/ad276caa-ab34-401d-a6f6-d35acaab7757
 
 ## Wave
 
+
+https://github.com/user-attachments/assets/23d0a7c3-b068-4d70-b296-12ae6b93c50e
+
+
 ![Capture d’écran 2025-04-23 210727](https://github.com/user-attachments/assets/9d88585e-098a-4eeb-aaa0-c37a21d15a7c)
 
 ## Advence custom Wave
